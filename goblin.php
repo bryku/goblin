@@ -9,7 +9,6 @@
 				$max = count($treeUrl);
 			}
 			for($i = 0; $i < $max; $i++){
-				echo  "&nbsp; &nbsp; ".$treeGet[$i]." === ".$treeUrl[$i]."<br>";
 				if($treeUrl[$i] == "*"){continue;}
 				if($treeUrl[$i] == $treeGet[$i]){continue;}
 				return false;
