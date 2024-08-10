@@ -1,4 +1,15 @@
 <?php
+	function goblin_route($route, $callback){
+		$treeRoute = explode('/',$route);
+		$treePath = explode('/',$_GET['path']);
+		for ($i = 0; $i < count($treeRoute); $i++) {
+			if($treeRoute[$i] == $treePath[$i]){continue;}
+			if($treeRoute[$i] == "*"){continue;}
+			return false;
+		}
+		$callback($_GET['path']);
+		die();
+	}
 	function goblin_mimetype($path){
 		$dir = explode(".", $path);
 		$ext = end($dir);
@@ -21,10 +32,10 @@
 		// Default
 		return 'text/plain';
 	}
-	function goblin_SendFile($path){
+	function goblin_send_file($path){
 		if(file_exists($path)){
 			if(is_file($path)){
-				header('Content-type: '.mime_type($path));
+				header('Content-type: '.goblin_mimetype($path));
 				header('Content-Length: '.filesize($path));
 				$file = fopen($path, 'rb');
 				fpassthru($file);
@@ -32,8 +43,19 @@
 				die();
 			}
 		}
-		http_response_code(404);
-		echo "Not Found";
+		http_response_code(410);
+		echo "Gone";
+		die();
+	}
+	function goblin_send_json($data){
+		$json = json_encode($data);
+		if($json){
+			header('Content-type: application/json');
+			echo $json;
+			die();
+		}
+		http_response_code(422);
+		echo "File Not Found";
 		die();
 	}
 ?>
