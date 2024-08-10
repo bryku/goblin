@@ -1,13 +1,22 @@
 <?php
-	function goblin_route($route, $callback){
-		$treeRoute = explode('/',$route);
-		$treePath = explode('/',$_GET['path']);
-		for ($i = 0; $i < count($treeRoute); $i++) {
-			if($treeRoute[$i] == $treePath[$i]){continue;}
-			if($treeRoute[$i] == "*"){continue;}
-			return false;
+	function goblin_route($url, $callback){
+		$treeGet = explode('/',$_GET['path']);
+		$treeUrl = explode('/',$url);
+		if(count($treeGet) != count($treeUrl)){return false;}
+		if($url !== $_GET['path']){
+			$max = count($treeGet);
+			if(count($treeUrl) > $max){
+				$max = count($treeUrl);
+			}
+			for($i = 0; $i < $max; $i++){
+				echo  "&nbsp; &nbsp; ".$treeGet[$i]." === ".$treeUrl[$i]."<br>";
+				if($treeUrl[$i] == "*"){continue;}
+				if($treeUrl[$i] == $treeGet[$i]){continue;}
+				return false;
+			}
 		}
-		$callback($_GET['path']);
+		
+		$callback($_GET['path'], $treeGet);
 		die();
 	}
 	function goblin_mimetype($path){
